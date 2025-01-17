@@ -103,6 +103,10 @@ const Hero = () => {
           />
         </div>
       </div>
+
+      <div className="absolute bottom-10 right-10">
+        <img src="assets/qr-code.jpg" className="w-24 rounded-md" alt="" />
+      </div>
     </section>
   );
 };
