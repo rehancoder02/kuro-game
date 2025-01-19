@@ -104,11 +104,11 @@ const Hero = () => {
         </div>
       </div>
 
-      <div className="absolute bottom-10 right-10">
-        <img src="assets/qr-code.jpg" className="w-24 rounded-md" alt="" />
+      <div className="absolute bottom-10 right-10 bg-black/20 p-2 rounded-md">
+        <img src="assets/qr-code.jpg" className="w-24 " alt="" />
       </div>
     </section>
   );
-};
+};  
 
 export default Hero;
