@@ -64,7 +64,7 @@ const Hero = ({ isActive }) => {
       <div className="absolute inset-0 z-0">
         {!videoLoaded && (
           <motion.img
-            src="/assets/hero-img.png"
+            src="/assets/hero-img.jpg"
             className="h-full w-full object-cover"
             alt="Game preview"
             loading="lazy"
