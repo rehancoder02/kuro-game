@@ -1,4 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState, useRef } from "react";
+import { 
+  motion, 
+  AnimatePresence,
+  useIsPresent 
+} from "framer-motion";
 import {
   FaDiscord,
   FaFacebook,
@@ -9,106 +14,221 @@ import {
 } from "react-icons/fa";
 import { ImCancelCircle } from "react-icons/im";
 import { FaXTwitter } from "react-icons/fa6";
-import gsap from "gsap";
 
-const Hero = () => {
+const SocialIcons = React.memo(() => (
+  <div className="flex items-center space-x-4">
+    <FaShare className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="Share" />
+    <FaXTwitter className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="Twitter" />
+    <FaFacebook className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="Facebook" />
+    <FaYoutube className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="YouTube" />
+    <FaDiscord className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="Discord" />
+    <FaTiktok className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="TikTok" />
+    <FaInstagram className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="Instagram" />
+  </div>
+));
+
+const Hero = ({ isActive }) => {
   const [trailer, setTrailer] = useState(false);
   const [videoLoaded, setVideoLoaded] = useState(false);
-  const iframeRef = useRef(null);
+  const safeYouTubeSrc = "https://www.youtube-nocookie.com/embed/wp4fdbuKw34";
+  const isPresent = useIsPresent();
 
-  useEffect(() => {
-    if (trailer) {
-      // Animate zoom in
-      gsap.fromTo(
-        iframeRef.current,
-        { scale: 0.2, opacity: 0 },
-        { scale: 1, opacity: 1, duration: 1, ease: "power3.out" }
-      );
-    } else {
-      // Animate zoom out
-      gsap.to(iframeRef.current, {
-        scale: 0.2,
-        opacity: 0,
+  const iframeVariants = {
+    hidden: { scale: 0.2, opacity: 0 },
+    visible: { 
+      scale: 1, 
+      opacity: 1,
+      transition: {
+        duration: 1,
+        ease: [0.16, 1, 0.3, 1]
+      }
+    },
+    exit: {
+      scale: 0.2,
+      opacity: 0,
+      transition: {
         duration: 0.8,
-        ease: "power3.in",
-      });
+        ease: [0.7, 0, 0.84, 0]
+      }
     }
-  }, [trailer]);
+  };
 
   return (
-    <section className="h-screen overflow-hidden relative">
-      <div className="absolute bottom-0">
-        {/* <img src="/assets/hero-img.jpg" className='h-screen w-screen object-cover' alt="" /> */}
+    <motion.section 
+      className={`relative h-screen w-full overflow-hidden hero-section ${isActive ? 'active' : ''}`}
+      aria-label="Hero section"
+      initial={false}
+      animate={isPresent ? "visible" : "hidden"}
+    >
+      {/* Background Video */}
+      <div className="absolute inset-0 z-0">
         {!videoLoaded && (
-          <img
-            src="/assets/hero-img.jpg"
-            className="h-screen w-screen object-cover"
-            alt=""
+          <motion.img
+            src="/assets/hero-img.png"
+            className="h-full w-full object-cover"
+            alt="Game preview"
+            loading="lazy"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           />
         )}
-        <video
+        <motion.video
           src="/assets/videos/hero-bg.mp4"
-          className={`${videoLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`h-full w-full object-cover ${videoLoaded ? "opacity-100" : "opacity-0"}`}
           autoPlay
           muted
+          playsInline
           loop
-          onCanPlayThrough={() => setVideoLoaded(true)}
+          preload="metadata"
+          onLoadedData={() => setVideoLoaded(true)}
+          aria-label="Background video"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: videoLoaded ? 1 : 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <source src="/assets/videos/hero-bg.webm" type="video/webm" />
+          <source src="/assets/videos/hero-bg.mp4" type="video/mp4" />
+        </motion.video>
+      </div>
+
+<div className="absolute bottom-10 left-10 z-10">
+      <SocialIcons />
+</div>
+
+      {/* Play Button */}
+      <motion.button
+        className="absolute top-1/2 left-1/2 z-10 cursor-pointer"
+        onClick={() => setTrailer(true)}
+        aria-label="Play game trailer"
+        whileHover={{ scale: 1.05, opacity: 0.55 }}
+        transition={{ duration: 0.3 }}
+      >
+        <img 
+          src="/assets/icons/play-btn.png" 
+          alt="" 
+          role="presentation"
+          loading="eager"
+          width="50"
+          height="50"
+        />
+      </motion.button>
+
+      {/* Trailer Modal */}
+      <AnimatePresence>
+        {trailer && (
+          <motion.div 
+            className="fixed inset-0 z-20 bg-black/75 flex items-center justify-center"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Video trailer modal"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+          >
+            <motion.div 
+              className="relative flex items-center gap-5"
+              variants={iframeVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+            >
+              <iframe
+                width="700"
+                height="415"
+                src={`${safeYouTubeSrc}?autoplay=1`}
+                title="Game trailer"
+                frameBorder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="rounded-lg shadow-xl"
+                loading="lazy"
+                importance="low"
+              />
+              <motion.div
+                className="absolute -right-12 top-0 cursor-pointer text-2xl text-white"
+                whileHover={{ scale: 1.1, opacity: 0.75 }}
+                transition={{ duration: 0.2 }}
+              >
+                <ImCancelCircle
+                  onClick={() => setTrailer(false)}
+                  aria-label="Close trailer"
+                />
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+     {/* QR Code with Text */}
+<motion.div 
+  className="absolute bottom-10 right-10 z-10 rounded-md bg-black/20 p-3 backdrop-blur-sm"
+  initial={{ opacity: 0, y: 20 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ delay: 0.5 }}
+>
+  <div className="flex items-center gap-3">
+    <img
+      src="/assets/qr-code.jpg"
+      className="h-24 w-24 object-contain flex-shrink-0"
+      alt="Download app QR code"
+      loading="lazy"
+      width="96"
+      height="96"
+    />
+    
+    <motion.div
+      className="text-white "
+      initial={{ opacity: 0, x: 10 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ delay: 0.8 }}
+    >
+      <p className="text-sm font-semibold mb-1 leading-tight">
+        Available On
+      </p>
+      
+      <div className="grid grid-cols-2 gap-2">
+        <motion.img 
+          src="/assets/icons/appstore.png"
+          alt="Download on the App Store"
+          className="h-8 w-36 cursor-pointer"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          loading="lazy"
+        />
+        
+        <motion.img 
+          src="/assets/icons/goolge-play.png"
+          alt="Get it on Google Play"
+          className="h-8 w-36 cursor-pointer"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          loading="lazy"
+        />
+        
+        <motion.img 
+          src="/assets/icons/ps5.png"
+          alt="Available on Epic Canesstore"
+          className="h-8 w-36 cursor-pointer"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          loading="lazy"
+        />
+        
+        <motion.img 
+          src="/assets/icons/playgames.png"
+          alt="Play on PC via Google Play Games"
+          className="h-8 w-36 cursor-pointer"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          loading="lazy"
         />
       </div>
-
-      {/* Social links */}
-      <div className="absolute bottom-10 left-10">
-        <div className="flex items-center space-x-4">
-          <FaShare className="text-white text-2xl cursor-pointer" />
-          <FaXTwitter className="text-white text-2xl cursor-pointer" />
-          <FaFacebook className="text-white text-2xl cursor-pointer" />
-          <FaYoutube className="text-white text-2xl cursor-pointer" />
-          <FaDiscord className="text-white text-2xl cursor-pointer" />
-          <FaTiktok className="text-white text-2xl cursor-pointer" />
-          <FaInstagram className="text-white text-2xl cursor-pointer" />
-        </div>
-      </div>
-
-      <div
-        className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 cursor-pointer hover:opacity-55 transition-all duration-300"
-        onClick={() => setTrailer(true)}
-      >
-        <img src="/assets/icons/play-btn.png" alt="" />
-      </div>
-
-      <div
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-black/75 h-screen w-screen ${
-          trailer ? "flex" : "hidden"
-        } justify-center items-center`}
-      >
-        <div className="flex gap-5">
-          <iframe
-            ref={iframeRef}
-            width="700"
-            height="415"
-            src={
-              trailer
-                ? "https://www.youtube.com/embed/wp4fdbuKw34?autoplay=1"
-                : "https://www.youtube.com/embed/wp4fdbuKw34?si=0k_CXDDx_ycNwYnq"
-            }
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            referrerpolicy="strict-origin-when-cross-origin"
-            allowfullscreen
-          ></iframe>
-          <ImCancelCircle
-            className="text-2xl text-white cursor-pointer"
-            onClick={() => setTrailer(false)}
-          />
-        </div>
-      </div>
-
-      <div className="absolute bottom-10 right-10 bg-black/20 p-2 rounded-md">
-        <img src="assets/qr-code.jpg" className="w-24 " alt="" />
-      </div>
-    </section>
+    </motion.div>
+  </div>
+</motion.div>
+    </motion.section>
   );
-};  
+};
 
-export default Hero;
+export default React.memo(Hero);
