@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Hero from './sections/Hero';
 import Navbar from './components/Navbar';
-import About from './sections/About';
+import News from './sections/News';
 import Portfolio from './sections/Protfolio';
 
 const App = () => {
@@ -9,7 +9,7 @@ const App = () => {
   const [isTransitioning, setIsTransitioning] = useState(false);
   const sections = [
     { id: 'hero', component: <Hero /> },
-    { id: 'about', component: <About /> },
+    { id: 'news', component: <News /> },
     { id: 'portfolio', component: <Portfolio /> }
   ];
 

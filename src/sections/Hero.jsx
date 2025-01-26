@@ -1,9 +1,5 @@
 import React, { useState, useRef } from "react";
-import { 
-  motion, 
-  AnimatePresence,
-  useIsPresent 
-} from "framer-motion";
+import { motion, AnimatePresence, useIsPresent } from "framer-motion";
 import {
   FaDiscord,
   FaFacebook,
@@ -17,13 +13,34 @@ import { FaXTwitter } from "react-icons/fa6";
 
 const SocialIcons = React.memo(() => (
   <div className="flex items-center space-x-4">
-    <FaShare className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="Share" />
-    <FaXTwitter className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="Twitter" />
-    <FaFacebook className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="Facebook" />
-    <FaYoutube className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="YouTube" />
-    <FaDiscord className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="Discord" />
-    <FaTiktok className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="TikTok" />
-    <FaInstagram className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75" aria-label="Instagram" />
+    <FaShare
+      className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75"
+      aria-label="Share"
+    />
+    <FaXTwitter
+      className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75"
+      aria-label="Twitter"
+    />
+    <FaFacebook
+      className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75"
+      aria-label="Facebook"
+    />
+    <FaYoutube
+      className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75"
+      aria-label="YouTube"
+    />
+    <FaDiscord
+      className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75"
+      aria-label="Discord"
+    />
+    <FaTiktok
+      className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75"
+      aria-label="TikTok"
+    />
+    <FaInstagram
+      className="text-2xl text-white cursor-pointer transition-opacity hover:opacity-75"
+      aria-label="Instagram"
+    />
   </div>
 ));
 
@@ -35,27 +52,29 @@ const Hero = ({ isActive }) => {
 
   const iframeVariants = {
     hidden: { scale: 0.2, opacity: 0 },
-    visible: { 
-      scale: 1, 
+    visible: {
+      scale: 1,
       opacity: 1,
       transition: {
         duration: 1,
-        ease: [0.16, 1, 0.3, 1]
-      }
+        ease: [0.16, 1, 0.3, 1],
+      },
     },
     exit: {
       scale: 0.2,
       opacity: 0,
       transition: {
         duration: 0.8,
-        ease: [0.7, 0, 0.84, 0]
-      }
-    }
+        ease: [0.7, 0, 0.84, 0],
+      },
+    },
   };
 
   return (
-    <motion.section 
-      className={`relative h-screen w-full overflow-hidden hero-section ${isActive ? 'active' : ''}`}
+    <motion.section
+      className={`relative h-screen w-full overflow-hidden hero-section ${
+        isActive ? "active" : ""
+      }`}
       aria-label="Hero section"
       initial={false}
       animate={isPresent ? "visible" : "hidden"}
@@ -74,7 +93,9 @@ const Hero = ({ isActive }) => {
         )}
         <motion.video
           src="/assets/videos/hero-bg.mp4"
-          className={`h-full w-full object-cover ${videoLoaded ? "opacity-100" : "opacity-0"}`}
+          className={`h-full w-full object-cover ${
+            videoLoaded ? "opacity-100" : "opacity-0"
+          }`}
           autoPlay
           muted
           playsInline
@@ -91,9 +112,9 @@ const Hero = ({ isActive }) => {
         </motion.video>
       </div>
 
-<div className="absolute bottom-10 left-10 z-10">
-      <SocialIcons />
-</div>
+      <div className="absolute bottom-10 left-10 z-10">
+        <SocialIcons />
+      </div>
 
       {/* Play Button */}
       <motion.button
@@ -103,9 +124,9 @@ const Hero = ({ isActive }) => {
         whileHover={{ scale: 1.05, opacity: 0.55 }}
         transition={{ duration: 0.3 }}
       >
-        <img 
-          src="/assets/icons/play-btn.png" 
-          alt="" 
+        <img
+          src="/assets/icons/play-btn.png"
+          alt=""
           role="presentation"
           loading="eager"
           width="50"
@@ -116,7 +137,7 @@ const Hero = ({ isActive }) => {
       {/* Trailer Modal */}
       <AnimatePresence>
         {trailer && (
-          <motion.div 
+          <motion.div
             className="fixed inset-0 z-20 bg-black/75 flex items-center justify-center"
             role="dialog"
             aria-modal="true"
@@ -126,7 +147,7 @@ const Hero = ({ isActive }) => {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <motion.div 
+            <motion.div
               className="relative flex items-center gap-5"
               variants={iframeVariants}
               initial="hidden"
@@ -160,73 +181,73 @@ const Hero = ({ isActive }) => {
         )}
       </AnimatePresence>
 
-     {/* QR Code with Text */}
-<motion.div 
-  className="absolute bottom-10 right-10 z-10 rounded-md bg-black/20 p-3 backdrop-blur-sm"
-  initial={{ opacity: 0, y: 20 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ delay: 0.5 }}
->
-  <div className="flex items-center gap-3">
-    <img
-      src="/assets/qr-code.jpg"
-      className="h-24 w-24 object-contain flex-shrink-0"
-      alt="Download app QR code"
-      loading="lazy"
-      width="96"
-      height="96"
-    />
-    
-    <motion.div
-      className="text-white "
-      initial={{ opacity: 0, x: 10 }}
-      animate={{ opacity: 1, x: 0 }}
-      transition={{ delay: 0.8 }}
-    >
-      <p className="text-sm font-semibold mb-1 leading-tight">
-        Available On
-      </p>
-      
-      <div className="grid grid-cols-2 gap-2">
-        <motion.img 
-          src="/assets/icons/appstore.png"
-          alt="Download on the App Store"
-          className="h-8 w-36 cursor-pointer"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          loading="lazy"
-        />
-        
-        <motion.img 
-          src="/assets/icons/goolge-play.png"
-          alt="Get it on Google Play"
-          className="h-8 w-36 cursor-pointer"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          loading="lazy"
-        />
-        
-        <motion.img 
-          src="/assets/icons/ps5.png"
-          alt="Available on Epic Canesstore"
-          className="h-8 w-36 cursor-pointer"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          loading="lazy"
-        />
-        
-        <motion.img 
-          src="/assets/icons/playgames.png"
-          alt="Play on PC via Google Play Games"
-          className="h-8 w-36 cursor-pointer"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          loading="lazy"
-        />
-      </div>
-    </motion.div>
-  </div>
-</motion.div>
+      {/* QR Code with Text */}
+      <motion.div
+        className="absolute bottom-10 right-10 z-10 rounded-md bg-black/20 p-3 backdrop-blur-sm"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5 }}
+      >
+        <div className="flex items-center gap-3">
+          <img
+            src="/assets/qr-code.jpg"
+            className="h-24 w-24 object-contain flex-shrink-0"
+            alt="Download app QR code"
+            loading="lazy"
+            width="96"
+            height="96"
+          />
+
+          <motion.div
+            className="text-white "
+            initial={{ opacity: 0, x: 10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.8 }}
+          >
+            <p className="text-sm font-semibold mb-1 leading-tight">
+              Available On
+            </p>
+
+            <div className="grid grid-cols-2 gap-2">
+              <motion.img
+                src="/assets/icons/appstore.png"
+                alt="Download on the App Store"
+                className="h-8 w-36 cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                loading="lazy"
+              />
+
+              <motion.img
+                src="/assets/icons/goolge-play.png"
+                alt="Get it on Google Play"
+                className="h-8 w-36 cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                loading="lazy"
+              />
+
+              <motion.img
+                src="/assets/icons/ps5.png"
+                alt="Available on Epic Canesstore"
+                className="h-8 w-36 cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                loading="lazy"
+              />
+
+              <motion.img
+                src="/assets/icons/playgames.png"
+                alt="Play on PC via Google Play Games"
+                className="h-8 w-36 cursor-pointer"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                loading="lazy"
+              />
+            </div>
+          </motion.div>
+        </div>
+      </motion.div>
     </motion.section>
   );
 };
